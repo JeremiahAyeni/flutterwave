@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Split Payment Form</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="text/javascript"
+    src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1 class="header">SPLIT PAYMENT</h1>
+    <div class="bvn-form">
+      <div class="input-fields">
+        <input type="email" required id="company_email" class="input" placeholder="user@example.com">
+      </div>
+      <div class="msg">
+        <div id="verify" class="btn">PAY HERE</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    
+    var sec_key = "/FLWSECK-a0ee6336af56cf6adf0be57211726dbd-X";
+
+    const API_publicKey = "FLWPUBK-33830882227965446f840361b253abbe-X";
+
+    //validate Email, so payent works
+    function validateEmail(email) {
+      var re = /\S+@\S+\.\S+/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    //create an event listener to help validate if the email is correct before proceedig
+    document.getElementById('verify').addEventListener("click", () => {
+      if (validateEmail(document.getElementById("company_email").value) == true) {
+
+        //called the function
+        payWithRave();
+      }
+      else { console.log(document.getElementById("company_email").value) }
+    });
+    function payWithRave() {
+      var x = getpaidSetup({
+        PBFPubKey: API_publicKey,
+        customer_email: "user@example.com",
+        amount: 2000,
+        currency: "NGN",
+        txref: "rave-123456",
+        subaccounts: [
+          {
+            id: 'RS_0E872DACB5EBC29D77447FA26D572201' // This assumes you have setup your commission on the dashboard.
+          }
+        ],
+        meta: [{
+          metaname: "flightID",
+          metavalue: "AP1234"
+        }],
+        onclose: function () { },
+        callback: function (response) {
+          var txref = response.tx.txRef; // collect flwRef returned and pass to a 					server page to complete status check.
+          console.log("This is the response returned after a charge", response);
+          if (
+            response.tx.chargeResponseCode == "00" ||
+            response.tx.chargeResponseCode == "0"
+          ) {
+            // retrieves list sub account
+            fetch('https://api.ravepay.co/v2/gpx/subaccounts?seckey=FLWSECK-a0ee6336af56cf6adf0be57211726dbd-X \
+')
+              .then(response => {
+                return response.json()
+              })
+              .then(data => {
+                // Working with JSON data here
+                stringify_data = JSON.stringify(data);
+
+                //success message displayed to the user
+                console.log(data); 
+              })
+              .catch(err => {
+                // Do something for an error here
+                console.log(err.data)
+              })
+          } else {
+            // redirect to a failure page.
+            window.location.replace = "failed.html/"
+          }
+
+          x.close(); // use this to close the modal immediately after payment.
+        }
+      });
+    }//end of pay_with_rave functiom          
+
+  </script>
+</body>
+
+</html>

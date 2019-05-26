@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BVN Verification Form</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1 class="header">BVN VERIFICATION</h1>
+    <div class="bvn-form">
+      <div class="input-fields">
+        <input type="text" id="name" class="input" placeholder="First Name Last Name">
+        <input title="This is required" type="text" oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+          maxlength="11" id="bvn" class="input" placeholder="BVN Number (This is Required)" required>
+      </div>
+      <div class="msg">
+        <textarea disabled id="verified">
+
+            </textarea>
+        <div id="verify" class="btn">Verify</div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    const wrapper = {
+      verify: document.getElementById("verify"),
+      messages: document.getElementById("verified")
+    }
+
+    function verify_me() {
+      var url = 'https://ravesandboxapi.flutterwave.com/v2/kyc/bvn/' + document.getElementById("bvn").value + '?seckey=FLWSECK-a0ee6336af56cf6adf0be57211726dbd-X \
+';
+      //variable to receive data from the api link
+      var status, bvn_data, first_name_data, last_name_data, middle_name_data, d_o_b, phone_number, reg_date;
+
+      //used the fetch method to access the api, receiving JSON
+      fetch(url)
+        .then(response => {
+          return response.json()
+        })
+        .then(data => {
+          // Working with JSON data here
+          //from example on the documentation, had to use stringify, rather that parse, to convert the JSON to String
+          stringify_data = JSON.stringify(data);
+
+          //added a break line to format the output on the textArea
+          var status = data.status + "\n";
+          var bvn_data = data.data.bvn + "\n";
+          var first_name_data = data.data.first_name + "\n";
+          var last_name_data = data.data.last_name + "\n";
+          var middle_name_data = data.data.middle_name + "\n";
+          var d_o_b = data.data.date_of_birth + "\n";
+          var phone_number = data.data.phone_number + "\n";
+          var reg_date = data.data.registration_date + "\n";
+
+          //success message displayed to the user
+          wrapper.messages.innerHTML =
+            "bvn :" + bvn_data +
+            "first_name :" + first_name_data +
+            "middle_name :" + middle_name_data +
+            "last_name :" + last_name_data +
+            "date_of_birth :" + d_o_b +
+            "phone_number :" + phone_number +
+            "registration_date :" + reg_date;
+          // console.log(data.);
+        })
+        .catch(err => {
+          // Do something for an error here
+          wrapper.messages.innerHTML =
+            "ERROR FETCHING INFORMATION FROM DATABASE\nPlease try again Later.\nThanks";
+        })
+    }
+
+    //called an eventListener on the verify button
+    wrapper.verify.addEventListener("click", (e) => {
+      if (document.getElementById("bvn").value.length < 11) {
+        wrapper.messages.innerHTML = document.getElementById("name").value + " 11 BVN Digits is Required";
+        "11 DIGITS IS REQUIRED!";
+      } else {
+        verify_me();
+        console.log("HI " + document.getElementById("name").value + "11 Digits Required")
+      };
+
+    });
+  </script>
+</body>
+
+</html>

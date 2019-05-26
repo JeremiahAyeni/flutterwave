@@ -1,0 +1,13 @@
+QUESTION:
+A new Ride sharing company is entering the market in Lagos and they would like to make sure they
+don't mix up their commission from rides taken by independent riders on the platform. How can
+Flutterwave solve this?
+
+From what i understand, 
+I believe the ride sharing company already has a platform (app/web), but wants flutterwave to help in making payment integration easy. 
+
+MY ANSWER
+The best way flutterwave could solve this would be to create different checkout(payment gateways) for different classes of riders, using a dinstinct "ID/CLASS" as an identifier for easy monitoring on the ride-sharing company flutter-wave dashboard and also, to easily manage the commission since they checkout slightly different.
+ 
+1. For a shared ride, which would involve payment from all customers who shared the ride. 
+2. For the independent rider,  
