@@ -22,7 +22,7 @@
     </div>
   </div>
   <script>
-    
+
     var sec_key = "/FLWSECK-a0ee6336af56cf6adf0be57211726dbd-X";
 
     const API_publicKey = "FLWPUBK-33830882227965446f840361b253abbe-X";
@@ -66,30 +66,16 @@
             response.tx.chargeResponseCode == "00" ||
             response.tx.chargeResponseCode == "0"
           ) {
-            // retrieves list sub account
-            fetch('https://api.ravepay.co/v2/gpx/subaccounts?seckey=FLWSECK-a0ee6336af56cf6adf0be57211726dbd-X \
-')
-              .then(response => {
-                return response.json()
-              })
-              .then(data => {
-                // Working with JSON data here
-                stringify_data = JSON.stringify(data);
-
-                //success message displayed to the user
-                console.log(data); 
-              })
-              .catch(err => {
-                // Do something for an error here
-                console.log(err.data)
-              })
+            // redirect to a success page
+            window.location.href = 'successful.html';
           } else {
             // redirect to a failure page.
-            window.location.replace = "failed.html/"
+            window.location.href = 'failed.html';
           }
 
           x.close(); // use this to close the modal immediately after payment.
         }
+
       });
     }//end of pay_with_rave functiom          
 
